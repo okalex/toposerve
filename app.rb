@@ -20,7 +20,7 @@ get '/map' do
   cache_file = "public/cache/world_#{countries.join('_')}.json"
   unless File.exist?(cache_file)
     `rm tmp/land.json`
-    ogr_cmd = "ogr2ogr -f GeoJSON #{filter} tmp/land.json data/src/countries.shp"
+    ogr_cmd = "ogr2ogr -f GeoJSON #{filter} tmp/land.json data/countries.shp"
     `#{ogr_cmd}`
 
     topojson_cmd = "topojson -o #{cache_file} --id-property SU_A3 --properties name=NAME -- tmp/land.json"
