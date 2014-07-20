@@ -1,0 +1,35 @@
+body {
+  background-color: #acf;
+  margin: 0;
+  padding: 0;
+}
+
+.country {
+  fill: rgb(240, 238, 235);
+}
+
+.lake {
+  fill: #acf;
+}
+
+.ocean {
+  fill: #acf;
+}
+
+.river {
+  display: none;
+  fill: none;
+  stroke: #acf;
+}
+
+.boundary {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.2);
+  stroke-dasharray: 1,1;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.boundary:hover {
+  stroke: #f00;
+}
+
