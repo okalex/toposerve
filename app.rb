@@ -24,7 +24,7 @@ get '/map' do
     ogr_cmd = "ogr2ogr -f GeoJSON #{filter} tmp/land.json data/countries.shp"
     `#{ogr_cmd}`
 
-    topojson_cmd = "topojson -o #{cache_file} --id-property SU_A3 --properties name=NAME -- tmp/land.json"
+    topojson_cmd = "topojson -o public#{cache_file} --id-property SU_A3 --properties name=NAME -- tmp/land.json"
     `#{topojson_cmd}`
   end
 
