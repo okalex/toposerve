@@ -10,6 +10,7 @@ end
 get '/map' do
   param :countries,  Array, default: []
 
+  # This should be an alphabetized set
   countries = params[:countries] || []
   if countries.empty?
     filter = ''
@@ -17,8 +18,8 @@ get '/map' do
     filter = "-where \"ADM0_A3 IN ('#{countries.join("','")}')\""
   end
 
-  cache_file = "public/cache/world_#{countries.join('_')}.json"
-  unless File.exist?(cache_file)
+  cache_file = "/cache/world_#{countries.join('_')}.json"
+  unless File.exist?("public#{cache_file}")
     `rm tmp/land.json`
     ogr_cmd = "ogr2ogr -f GeoJSON #{filter} tmp/land.json data/countries.shp"
     `#{ogr_cmd}`
@@ -27,5 +28,5 @@ get '/map' do
     `#{topojson_cmd}`
   end
 
-  `cat #{cache_file}`
+  redirect(cache_file)
 end
