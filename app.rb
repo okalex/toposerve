@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/param'
 require 'yaml'
+require 'tempfile'
 
 helpers Sinatra::Param
 
@@ -23,18 +24,22 @@ get '/map' do
       country_codes.has_key?(country)
     end
     requested_countries.sort!
-    puts requested_countries
     filter = "-where \"ADM0_A3 IN ('#{requested_countries.join("','")}')\""
   end
 
   cache_file = "/cache/world_#{requested_countries.join('_')}.json"
   unless File.exist?("public#{cache_file}")
-    `rm tmp/land.json`
-    ogr_cmd = "ogr2ogr -f GeoJSON #{filter} tmp/land.json data/countries.shp"
+    topofile = Dir::Tmpname.make_tmpname(['tmp/', '.json'], 'land')
+
+    ogr_cmd = "ogr2ogr -f GeoJSON #{filter} #{topofile} data/countries.shp"
+    puts ogr_cmd
     `#{ogr_cmd}`
 
-    topojson_cmd = "topojson -o public#{cache_file} --id-property SU_A3 --properties name=NAME -- tmp/land.json"
+    topojson_cmd = "topojson -o public#{cache_file} --id-property SU_A3 --properties name=NAME -- land=#{topofile}"
+    puts topojson_cmd
     `#{topojson_cmd}`
+
+    File.delete(topofile)
   end
 
   redirect(cache_file)
